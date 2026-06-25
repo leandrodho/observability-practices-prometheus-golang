@@ -1,3 +1,28 @@
-module observability-practices-prometheus-golang
+name: Go CI
 
-go 1.22
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+
+    - name: Fetch dependencies
+      run: go mod tidy
+
+    - name: Verify module integrity
+      run: go mod verify
+
+    - name: Build project
+      run: go build -v ./...
